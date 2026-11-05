@@ -13,7 +13,7 @@ export async function GET(req: Request) {
         }
 
         await connectDB();
-        const transactions = (await Transaction.find({userId})).sort({createdAt: -1}as any);
+        const transactions = await Transaction.find({userId}).sort({createdAt: -1});
         return NextResponse.json(transactions, {status:200});
     } catch(error){
         return NextResponse.json({message : "Błąd pobierania transakcji."}, {status:500});
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         const newTransaction = await Transaction.create({
             userId,
             title,
-            amount,
+            amount : Number(amount),
             type,
             category,
             date : date || new Date().toISOString().split('T')[0],
